@@ -11,7 +11,7 @@ Progress note
 
 ## Daily notes
 
-#### 20th June 2019
+#### Thursday, 20th June 2019
 - Morning: Got the doc from Callum.
 - 15.00: Had some free time at work, decided to setup the project on GitHub private. My approach was starting from Item 1 (Farming) with single player mode to get myself familiar with UE4 - from what I'd read earlier about the UE4's multiplayer architecture, it should be easy to switch from single to multi.
 - 15.15: Things got set up nicely. Time to commit.
@@ -28,3 +28,11 @@ Progress note
         - Not sure why when I use this code, the player stops moving. Will investigate tomorrow: `if (Target) SetActorLocation(Target->GetActorLocation());`
     - *Side notes*: Currently I'm grouping source code files into task folder, eg Farming, Moving..., because that's the way I work in Unity. If this is not a recommended folder structure, please make a comment and I appreciate that :)
 
+#### Friday, 21th June 2019
+- 14.30: Had an hour of free time at work after the lunch break. Decided to continue working on the marker mechanics. The bug turned out to be the physics settings blocks player's movement. Disable collision of marker actor in C++ constructor then things are fine.
+    - Got a moment of confusion in debugging because instructions keep running around (_randomly_?), not sequentially as I expected. Local variable values are also messed up => That was caused by binary optimization, switched to _DebugGame Editor_ instead of _Development Editor_ makes the debugger works as expected. Thank you StackOverflow!
+    - The basic idea for the mechanics: 
+        - I use player forward direction to decide which slot to put the marker.
+        - A static const array in the cpp file is used to store allowed direction (currently just Forward/Backward and Left/Right, but we can easily add other directions if the situation needs, while still being by the vector athrimetic).
+        - Dot product operation is used to see which direction is "closest" to where the player is heading at right now.
+        - Things still don't work correctly with negative direction cases, gonna check them out this evening.

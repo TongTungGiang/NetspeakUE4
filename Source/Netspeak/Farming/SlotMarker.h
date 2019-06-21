@@ -26,9 +26,14 @@ public:
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void SetTarget(AActor* Target);
+	void SetFollowTarget(AActor* FollowTarget);
 
 private:
+
+
+	/** A square mesh showing where is the player's selected slot */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Slot, meta = (AllowPrivateAccess = "true"))
+	int SlotSize;
 
 	/** A square mesh showing where is the player's selected slot */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Slot, meta = (AllowPrivateAccess = "true"))
@@ -36,6 +41,11 @@ private:
 
 	/** Reference to player's actor (we don't need the whole Character class anyways) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Slot, meta = (AllowPrivateAccess = "true"))
-	AActor* Target;
+	AActor* FollowTarget;
+
+private:
+
+	/** Find the closest slot in front of player actor */
+	FVector FindClosestSlot(FVector TargetPosition, FVector TargetOrientation);
 	
 };
