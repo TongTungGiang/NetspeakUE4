@@ -36,3 +36,5 @@ Progress note
         - A static const array in the cpp file is used to store allowed direction (currently just Forward/Backward and Left/Right, but we can easily add other directions if the situation needs, while still being by the vector athrimetic).
         - Dot product operation is used to see which direction is "closest" to where the player is heading at right now.
         - Things still don't work correctly with negative direction cases, gonna check them out this evening.
+- 18.00: Finished work but staying at the office for a while. Gotta fix that marker placement first.
+- 18.15: OK there was a flaw in my conversion back and forth between world position to integer-based slot coordinate. Fixed it.

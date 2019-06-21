@@ -61,9 +61,6 @@ void ASlotMarker::SetFollowTarget(AActor* FollowTarget)
 
 FVector ASlotMarker::FindClosestSlot(FVector TargetPosition, FVector TargetOrientation)
 {
-	int SlotIndexX = TargetPosition.X / SlotSize;
-	int SlotIndexY = TargetPosition.Y / SlotSize;
-
 	// Find the closest allowed direction to current forward direction
 	FVector DesiredDirection;
 	float MaxDotProduct = TNumericLimits<float>::Min();
@@ -77,10 +74,17 @@ FVector ASlotMarker::FindClosestSlot(FVector TargetPosition, FVector TargetOrien
 		}
 	}
 
-	// Get the slot's coordinate
+	// Get the facing slot's coordinate
+	int32 SlotIndexX = FMath::FloorToInt(TargetPosition.X / SlotSize);
+	int32 SlotIndexY = FMath::FloorToInt(TargetPosition.Y / SlotSize);
 	FVector SlotCoordinate = FVector(SlotIndexX, SlotIndexY, 0.0f);
 	SlotCoordinate += DesiredDirection;
+	UE_LOG(LogTemp, Log, TEXT("Standing Slot: (%d, %d), Facing Direction: (%d, %d), Target Slot: (%d, %d)"),
+		   SlotIndexX, SlotIndexY,
+		   (int32)DesiredDirection.X, (int32)DesiredDirection.Y,
+		   (int32)SlotCoordinate.X, (int32)SlotCoordinate.Y);
 
+	// Convert slot coordinate to slot location
 	FVector SlotWorldLocation = SlotCoordinate * SlotSize + FVector(SlotSize / 2, SlotSize / 2, 0);
 
 	return SlotWorldLocation;
