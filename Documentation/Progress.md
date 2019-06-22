@@ -28,7 +28,7 @@ Progress note
         - Not sure why when I use this code, the player stops moving. Will investigate tomorrow: `if (Target) SetActorLocation(Target->GetActorLocation());`
     - *Side notes*: Currently I'm grouping source code files into task folder, eg Farming, Moving..., because that's the way I work in Unity. If this is not a recommended folder structure, please make a comment and I appreciate that :)
 
-#### Friday, 21th June 2019
+#### Friday, 21st June 2019
 - 14.30: Had an hour of free time at work after the lunch break. Decided to continue working on the marker mechanics. The bug turned out to be the physics settings blocks player's movement. Disable collision of marker actor in C++ constructor then things are fine.
     - Got a moment of confusion in debugging because instructions keep running around (_randomly_?), not sequentially as I expected. Local variable values are also messed up => That was caused by binary optimization, switched to _DebugGame Editor_ instead of _Development Editor_ makes the debugger works as expected. Thank you StackOverflow!
     - The basic idea for the mechanics: 
@@ -43,3 +43,13 @@ So that means I have two tasks ahead, hopefully I can finish this within 1 hour 
     - Continue setting up the ISlot interface with switching and interacting function. An ISlot variable, which should be editable in BP, is required as well. Designers can change this to any next state they want, without messing up any logical flows. Normally when I work with Unity, game designers are not good at thinking in logical order, so I prefer to give him limited choices that they can select, compared to let them modify the flow directly (even in BP).
     - Setup a GUI element for showing the purpose of the next action.
 - 20.00: The interface approach turned out to be useless. I switched into a base UObject C++ class, called SlotHandler (but it should be SlotStateHandler), with a BP-exposed variable to select next state. This class can contain other information such as state color and GUI message. I mean to use it as a configurable data container for a SlotActor, which would contain a pointer to SlotHandler, indicating its current states and process to next state based on time or input. I'll take time to think about this tomorrow.
+
+
+#### Saturday, 22nd June 2019
+- 10.00: Today I'm gonna finish the interaction part of they player with the world. Yesterday I left off with a SlotHander UObject, so that would be where I'm gonna pick up today.
+- 10.40: The player needs to know whether the slot he is facing has any actor on it, so I move the position/coordinate conversion to a utility class. 
+- 13.40: Took me more than two hours to make the interaction works as intended
+    - A bug in UE caused newly added UPROPERTYs has blank detail panels - I thought that was my fault and spent my time tweaking UPROPERTY's options.
+    - UE also has many different functions for purposes with some slight difference. I kept switching back and forth between Development and Debug mode to see why when I try to change the material of the slot, UE crashes. It seems there is a difference between `Mesh->GetMaterial()` and `Mesh->CreateAndSetMaterialInstanceDynamic`. I had even ignored the latter, with the assumption that when I have a material correctly assigned, why do I need to create another one?
+    - Anyways, now the character can run around, with a marker indicating the closest slot in front of him, and can soil an empty slot. Next work would be allowing him to change the slot from soil to other states, which should be easy with current code base. Also, time to play with some HUD stuff, so that player can have an indicator on the slot telling him if he presses Enter, which would happen.
+    - But I'm gonna take a short break.
