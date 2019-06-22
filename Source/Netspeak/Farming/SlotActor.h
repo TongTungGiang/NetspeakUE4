@@ -26,8 +26,28 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:
+
+	void SwitchToNextState();
+
+private:
+
+	void InitState(USlotHandlerObject* SlotStateHandler);
+
+private:
+
+	/** Default state when interact with an "empty" slot, aka the state that an actor would get upon its creation */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<USlotHandlerObject> DefaultState;
+
+	/** Default state when interact with an "empty" slot, aka the state that an actor would get upon its creation */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "States|Visual", meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* SlotMesh;
+
 private:
 
 	USlotHandlerObject* SlotStateHandler;
+
+	UMaterial* SlotMaterial;
 	
 };

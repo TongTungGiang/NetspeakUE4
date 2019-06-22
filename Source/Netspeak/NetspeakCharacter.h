@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Farming/SlotActor.h"
 #include "NetspeakCharacter.generated.h"
 
 UCLASS(Blueprintable)
@@ -24,6 +25,10 @@ public:
 	/** Returns CursorToWorld subobject **/
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
+public:
+	class UBoxComponent* GetSlotDetector() { return SlotDetector; }
+	TSubclassOf<ASlotActor> GetDefaultSlotActorClass() { return DefaultSlotActorClass; }
+
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -36,5 +41,13 @@ private:
 	/** A decal that projects to the cursor location. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UDecalComponent* CursorToWorld;
+
+	/** Character's sensor to slot world. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Interaction, meta = (AllowPrivateAccess = "true"))
+	class UBoxComponent* SlotDetector;
+
+	/** Default slot to spawn */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ASlotActor> DefaultSlotActorClass;
 };
 

@@ -27,6 +27,8 @@ protected:
 
 	/** Handles strafing movement, left and right */
 	void MoveRight(float Val);
-};
 
+	/** Reacts to interaction button */
+	void InteractWithClosestSlot();
+};
 

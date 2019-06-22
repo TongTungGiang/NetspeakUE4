@@ -22,8 +22,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	USlotHandlerObject* GetNextStateHandler();
 
+	FLinearColor GetStateColor() { return StateColor; }
+
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")
 	TSubclassOf<USlotHandlerObject> NextState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")
+	FLinearColor StateColor;
 };

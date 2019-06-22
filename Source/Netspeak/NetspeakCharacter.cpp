@@ -11,6 +11,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "Runtime/Engine/Classes/Components/BoxComponent.h"
 
 ANetspeakCharacter::ANetspeakCharacter()
 {
@@ -51,6 +52,15 @@ ANetspeakCharacter::ANetspeakCharacter()
 	}
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
+
+	SlotDetector = CreateDefaultSubobject<UBoxComponent>("SlotDetector");
+	SlotDetector->SetupAttachment(RootComponent);
+
+	// Get Default Slot Actor
+	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Farming/Slots/Blueprints/BP_SlotActor.BP_SlotActor'"));
+	if (ItemBlueprint.Object) {
+		DefaultSlotActorClass = (UClass*)ItemBlueprint.Object->GeneratedClass;
+	}
 
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
