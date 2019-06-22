@@ -55,3 +55,5 @@ So that means I have two tasks ahead, hopefully I can finish this within 1 hour 
     - But I'm gonna take a short break.
 - 17.00: Back from break.
 - 18.30: Took me more than an hour to figure out how to make a UI widget, and how to make it follow the actor in world space. Luckily no math involved, UE has a few handy functions for that. Next I'd make the widget indicates next state of any slot, event empty ones. Off the top of my head it seems I should make another helper/utilities function for this, because I'd already have the same thing when player hits Enter key to spawn new cell/switch to next state.
+- 19.20: Done with the widget's content. Now it would display what the gamer should expect when pressing Enter.
+
