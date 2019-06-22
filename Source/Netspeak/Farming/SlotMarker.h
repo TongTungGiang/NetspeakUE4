@@ -26,7 +26,7 @@ public:
 public:
 
 	UFUNCTION(BlueprintCallable)
-		void SetFollowTarget(AActor* FollowTarget);
+	void SetFollowTarget(AActor* FollowTarget);
 
 private:
 
@@ -37,5 +37,9 @@ private:
 	/** Reference to player's actor (we don't need the whole Character class anyways) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Slot, meta = (AllowPrivateAccess = "true"))
 	AActor* FollowTarget;
+
+	/** Reference to player's actor (we don't need the whole Character class anyways) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Slot, meta = (AllowPrivateAccess = "true"))
+	FText NextAction;
 
 };

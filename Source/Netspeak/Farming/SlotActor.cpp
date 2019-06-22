@@ -56,3 +56,8 @@ void ASlotActor::InitState(USlotHandlerObject* SlotStateHandler)
 	Material->SetVectorParameterValue(FName(TEXT("Color")), SlotStateHandler->GetStateColor());
 }
 
+USlotHandlerObject* ASlotActor::GetNextState()
+{
+	return SlotStateHandler->GetNextStateHandler();
+}
+

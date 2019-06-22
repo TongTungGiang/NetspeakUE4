@@ -1,7 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SlotUtilities.h"
-
+#include "SlotActor.h"
+#include "Components/PrimitiveComponent.h"
+#include "NetspeakGameMode.h"
+#include "Engine/World.h"
 
 static const FVector AllowedDirections[] =
 {
@@ -54,4 +57,30 @@ FVector FSlotUtilities::ToCoordinate(FVector SlotLocation, float SlotSize)
 FVector FSlotUtilities::ToWorldPosition(FVector SlotCoordinate, float SlotSize)
 {
 	return SlotCoordinate * SlotSize + FVector(SlotSize / 2, SlotSize / 2, 0);
+}
+
+ASlotActor* FSlotUtilities::GetSlotAtCoordinate(UPrimitiveComponent* Detector, FVector SelectedCoordinate, float SlotSize)
+{
+	TArray<AActor*> OverlappingActors;
+	Detector->GetOverlappingActors(OverlappingActors, ASlotActor::StaticClass());
+
+	// Check if the detector found any slot with the desired coordinate
+	for (auto It = OverlappingActors.CreateConstIterator(); It; ++It)
+	{
+		ASlotActor* CurrentSlot = (ASlotActor*)(*It);
+		FVector CurrentSlotCoordinate = FSlotUtilities::ToCoordinate(CurrentSlot->GetActorLocation(), SlotSize);
+		if (CurrentSlotCoordinate == SelectedCoordinate)
+		{
+			return CurrentSlot;
+			break;
+		}
+	}
+
+	return NULL;
+}
+
+float FSlotUtilities::GetSlotSize(UWorld* World)
+{
+	ANetspeakGameMode* GameMode = (ANetspeakGameMode*)(World->GetAuthGameMode());
+	return GameMode->GetSlotSize();
 }

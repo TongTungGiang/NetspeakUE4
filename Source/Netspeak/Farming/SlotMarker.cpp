@@ -5,6 +5,7 @@
 #include "NetspeakGameMode.h"
 #include "SlotUtilities.h"
 #include "Engine/World.h"
+#include "SlotActor.h"
 
 // Sets default values
 ASlotMarker::ASlotMarker()
@@ -39,6 +40,7 @@ void ASlotMarker::Tick(float DeltaTime)
 
 	if (FollowTarget)
 	{
+		// Snap actor location to a grid slot
 		FVector CurrentTargetLocation = FollowTarget->GetActorLocation();
 		FVector CurrentTargetOrientation = FollowTarget->GetActorForwardVector();
 
@@ -47,6 +49,17 @@ void ASlotMarker::Tick(float DeltaTime)
 		FVector DesiredLocation = FSlotUtilities::FindClosestSlot(CurrentTargetLocation, CurrentTargetOrientation, SlotSize);
 
 		SetActorLocation(DesiredLocation);
+
+		// Update next action text
+		ASlotActor* Slot = FSlotUtilities::GetSlotAtCoordinate(SlotMarker, FSlotUtilities::ToCoordinate(DesiredLocation, SlotSize), SlotSize);
+		if (Slot == NULL)
+		{
+			NextAction = FText::FromString(FString("Soil"));
+		}
+		else
+		{
+			NextAction = Slot->GetNextState()->StateText;
+		}
 	}
 }
 

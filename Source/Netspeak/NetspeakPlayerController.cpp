@@ -61,33 +61,17 @@ void ANetspeakPlayerController::InteractWithClosestSlot()
 		return;
 	}
 
-	ANetspeakGameMode* GameMode = (ANetspeakGameMode*)(World->GetAuthGameMode());
-	float SlotSize = GameMode->GetSlotSize();
+	float SlotSize = FSlotUtilities::GetSlotSize(World);
 	FVector ActiveSlotCoordinate = FSlotUtilities::FindClosestSlotCoordinate(MyPawn->GetActorLocation(), MyPawn->GetActorForwardVector(), SlotSize);
 
-	// Use the detector to find available slots
-	TArray<AActor*> OverlappingActors;
-	ANetspeakCharacter* MyChar = (ANetspeakCharacter*)MyPawn;
-	MyChar->GetSlotDetector()->GetOverlappingActors(OverlappingActors, TSubclassOf<ASlotActor>());
-	
-	// Check if the detector found any slot with the desired coordinate
-	ASlotActor* SlotAtCoordinate = NULL;
-	for (auto It = OverlappingActors.CreateConstIterator(); It; ++It)
-	{
-		ASlotActor* CurrentSlot = (ASlotActor*)(*It);
-		FVector CurrentSlotCoordinate = FSlotUtilities::ToCoordinate(CurrentSlot->GetActorLocation(), SlotSize);
-		if (CurrentSlotCoordinate == ActiveSlotCoordinate)
-		{
-			SlotAtCoordinate = CurrentSlot;
-			break;
-		}
-	}
-
 	// Process detected result
+	ANetspeakCharacter* MyChar = (ANetspeakCharacter*)MyPawn;
+	ASlotActor* SlotAtCoordinate = FSlotUtilities::GetSlotAtCoordinate(MyChar->GetSlotDetector(), ActiveSlotCoordinate, SlotSize);
 	if (SlotAtCoordinate)
 	{
 		//SlotAtCoordinate->SwitchToNextState();
 		UE_LOG(LogTemp, Log, TEXT("Switch to next state"));
+		SlotAtCoordinate->SwitchToNextState();
 	}
 	else
 	{

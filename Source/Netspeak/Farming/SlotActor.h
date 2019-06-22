@@ -30,6 +30,8 @@ public:
 
 	void SwitchToNextState();
 
+	USlotHandlerObject* GetNextState();
+
 private:
 
 	void InitState(USlotHandlerObject* SlotStateHandler);

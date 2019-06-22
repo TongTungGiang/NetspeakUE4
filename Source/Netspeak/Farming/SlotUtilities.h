@@ -19,4 +19,7 @@ public:
 	static FVector ToCoordinate(FVector SlotLocation, float SlotSize);
 	static FVector ToWorldPosition(FVector SlotCoordinate, float SlotSize);
 
+	static class ASlotActor* GetSlotAtCoordinate(class UPrimitiveComponent* Detector, FVector SelectedCoordinate, float SlotSize);
+
+	static float GetSlotSize(class UWorld* World);
 };

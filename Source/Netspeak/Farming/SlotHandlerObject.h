@@ -24,11 +24,14 @@ public:
 
 	FLinearColor GetStateColor() { return StateColor; }
 
-protected:
+public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")
 	TSubclassOf<USlotHandlerObject> NextState;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")
 	FLinearColor StateColor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")
+	FText StateText;
 };
