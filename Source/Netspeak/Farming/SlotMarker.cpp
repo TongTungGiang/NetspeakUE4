@@ -2,16 +2,9 @@
 
 #include "SlotMarker.h"
 #include "Components/StaticMeshComponent.h"
-
-
-static const FVector AllowedDirections[] =
-{
-	FVector::ForwardVector,
-	-FVector::ForwardVector,
-	FVector::RightVector,
-	-FVector::RightVector,
-};
-
+#include "NetspeakGameMode.h"
+#include "SlotUtilities.h"
+#include "Engine/World.h"
 
 // Sets default values
 ASlotMarker::ASlotMarker()
@@ -48,7 +41,10 @@ void ASlotMarker::Tick(float DeltaTime)
 	{
 		FVector CurrentTargetLocation = FollowTarget->GetActorLocation();
 		FVector CurrentTargetOrientation = FollowTarget->GetActorForwardVector();
-		FVector DesiredLocation = FindClosestSlot(CurrentTargetLocation, CurrentTargetOrientation);
+
+		ANetspeakGameMode* GameMode = (ANetspeakGameMode*)(GetWorld()->GetAuthGameMode());
+		float SlotSize = GameMode->GetSlotSize();
+		FVector DesiredLocation = FSlotUtilities::FindClosestSlot(CurrentTargetLocation, CurrentTargetOrientation, SlotSize);
 
 		SetActorLocation(DesiredLocation);
 	}
@@ -58,35 +54,3 @@ void ASlotMarker::SetFollowTarget(AActor* FollowTarget)
 {
 	this->FollowTarget = FollowTarget;
 }
-
-FVector ASlotMarker::FindClosestSlot(FVector TargetPosition, FVector TargetOrientation)
-{
-	// Find the closest allowed direction to current forward direction
-	FVector DesiredDirection;
-	float MaxDotProduct = TNumericLimits<float>::Min();
-	for (auto Direction : AllowedDirections)
-	{
-		float Dot = FVector::DotProduct(TargetOrientation, Direction);
-		if (Dot > MaxDotProduct)
-		{
-			DesiredDirection = Direction;
-			MaxDotProduct = Dot;
-		}
-	}
-
-	// Get the facing slot's coordinate
-	int32 SlotIndexX = FMath::FloorToInt(TargetPosition.X / SlotSize);
-	int32 SlotIndexY = FMath::FloorToInt(TargetPosition.Y / SlotSize);
-	FVector SlotCoordinate = FVector(SlotIndexX, SlotIndexY, 0.0f);
-	SlotCoordinate += DesiredDirection;
-	UE_LOG(LogTemp, Log, TEXT("Standing Slot: (%d, %d), Facing Direction: (%d, %d), Target Slot: (%d, %d)"),
-		   SlotIndexX, SlotIndexY,
-		   (int32)DesiredDirection.X, (int32)DesiredDirection.Y,
-		   (int32)SlotCoordinate.X, (int32)SlotCoordinate.Y);
-
-	// Convert slot coordinate to slot location
-	FVector SlotWorldLocation = SlotCoordinate * SlotSize + FVector(SlotSize / 2, SlotSize / 2, 0);
-
-	return SlotWorldLocation;
-}
-

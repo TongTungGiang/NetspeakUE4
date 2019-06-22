@@ -10,8 +10,8 @@ UCLASS()
 class NETSPEAK_API ASlotMarker : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ASlotMarker();
 
@@ -19,21 +19,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 public:
 
 	UFUNCTION(BlueprintCallable)
-	void SetFollowTarget(AActor* FollowTarget);
+		void SetFollowTarget(AActor* FollowTarget);
 
 private:
-
-
-	/** A square mesh showing where is the player's selected slot */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Slot, meta = (AllowPrivateAccess = "true"))
-	int SlotSize;
 
 	/** A square mesh showing where is the player's selected slot */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Slot, meta = (AllowPrivateAccess = "true"))
@@ -43,9 +38,4 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Slot, meta = (AllowPrivateAccess = "true"))
 	AActor* FollowTarget;
 
-private:
-
-	/** Find the closest slot in front of player actor */
-	FVector FindClosestSlot(FVector TargetPosition, FVector TargetOrientation);
-	
 };
