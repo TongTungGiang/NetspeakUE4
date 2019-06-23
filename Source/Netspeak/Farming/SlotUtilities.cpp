@@ -86,3 +86,10 @@ float FSlotUtilities::GetSlotSize(UWorld* World)
 
 	return GameState->GetSlotSize();
 }
+
+UClass* FSlotUtilities::GetDefaultSlotActorClass(UWorld* World)
+{
+	ANetspeakGameState* GameState = World->GetGameState<ANetspeakGameState>();
+
+	return GameState->GetDefaultSlotActorClass();
+}

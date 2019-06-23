@@ -27,7 +27,6 @@ public:
 
 public:
 	class UBoxComponent* GetSlotDetector() { return SlotDetector; }
-	TSubclassOf<ASlotActor> GetDefaultSlotActorClass() { return DefaultSlotActorClass; }
 
 private:
 	/** Top down camera */
@@ -45,9 +44,5 @@ private:
 	/** Character's sensor to slot world. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Interaction, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* SlotDetector;
-
-	/** Default slot to spawn */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<ASlotActor> DefaultSlotActorClass;
 };
 

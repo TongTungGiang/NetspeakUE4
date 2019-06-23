@@ -30,5 +30,8 @@ protected:
 
 	/** Reacts to interaction button */
 	void InteractWithClosestSlot();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_SpawnSlotActor(FVector Coordinate);
 };
 

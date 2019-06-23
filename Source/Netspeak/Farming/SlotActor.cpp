@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -23,6 +24,16 @@ ASlotActor::ASlotActor()
 	// Create state handler
 	static ConstructorHelpers::FObjectFinder<UBlueprint> DefaultStateAsset(TEXT("Blueprint'/Game/Farming/Slots/Blueprints/BP_SoilState.BP_SoilState'"));
 	DefaultState = (UClass*)DefaultStateAsset.Object->GeneratedClass;
+
+	// Set replicate actor
+	bReplicates = true;
+}
+
+void ASlotActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASlotActor, SlotStateHandler);
 }
 
 // Called when the game starts or when spawned
@@ -59,6 +70,11 @@ void ASlotActor::InitState(USlotHandlerObject* SlotStateHandler)
 	// Set color
 	UMaterialInstanceDynamic* Material = (UMaterialInstanceDynamic*)SlotMesh->CreateAndSetMaterialInstanceDynamic(0);
 	Material->SetVectorParameterValue(FName(TEXT("Color")), SlotStateHandler->GetStateColor());
+}
+
+void ASlotActor::OnRep_SlotStateHandler()
+{
+	InitState(SlotStateHandler);
 }
 
 USlotHandlerObject* ASlotActor::GetNextState()

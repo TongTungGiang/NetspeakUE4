@@ -48,8 +48,12 @@ private:
 
 private:
 
+	UPROPERTY(ReplicatedUsing=OnRep_SlotStateHandler)
 	USlotHandlerObject* SlotStateHandler;
 
 	UMaterial* SlotMaterial;
+
+	UFUNCTION()
+	void OnRep_SlotStateHandler();
 	
 };

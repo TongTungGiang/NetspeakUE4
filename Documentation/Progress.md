@@ -62,9 +62,13 @@ add code for handling time-based transition (plant to harvest ready), and starti
 
 #### Sunday, 23rd June 2019
 - 9.30: Get up and start working. Turned on Dedicated server.
-- 12.00: Game crashed when just fire Play button. The call stack and debugger showed that there is something wrong with a reference somewhere, turned out Game Mode object cannot be accessed on. A couple of minutes wandering around on Google leads me to the great PDF called UE4 Networking Compedium. Great, so I have to switch SlotSize config variable to a Game State class. 
+- 12.00: Game crashed when just fire Play button. The call stack and debugger showed that there is something wrong with a reference somewhere, turned out Game Mode object cannot be accessed on. A couple of minutes wandering around on Google leads me to the great PDF called UE4 Networking Compendium. Great, so I have to switch SlotSize config variable to a Game State class. 
 Really got confused though. When my game state derives from AGameState, the character's BeginPlay event isn't even fired. Took me near one hour to figure out I should have it derives from AGameStateBase. But then, the SlotSize value is not deterministic every time, which leads to an inconsistent game result. One time it'd be zero, another time it was 27 and another try gives me the result of 84!!?!!
 Not sure if I've done anything wrong with the setup. Gonna take a rest and comeback later.
 - 14.00: Got back from break. Gotta tackle the bug.
 - 15.00: Looks like that I found the solution: 
 From the hint that in World Outliner, there seems to be something wrong with the initialization process. I spot that in the custom game mode there is also some code for setting default Pawn class, so I think it can be done the same with Game State class.
+Increased player number to two, and things seems to be working fine except those things:
+    - Non empty slots don't get replicated.
+    - Some runtime error on slot marker blueprint.
+    - There are two HUD elements on each client, where should be only one for the local player.

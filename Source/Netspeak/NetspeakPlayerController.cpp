@@ -53,8 +53,7 @@ void ANetspeakPlayerController::InteractWithClosestSlot()
 	{
 		return;
 	}
-
-
+	
 	UWorld* const World = GetWorld();
 	if (!World)
 	{
@@ -76,9 +75,25 @@ void ANetspeakPlayerController::InteractWithClosestSlot()
 	else
 	{
 		UE_LOG(LogTemp, Log, TEXT("Should create new slot at %s"), *ActiveSlotCoordinate.ToString());
-		World->SpawnActor<ASlotActor>(MyChar->GetDefaultSlotActorClass(),
-									  FSlotUtilities::ToWorldPosition(ActiveSlotCoordinate, SlotSize),
-									  FRotator::ZeroRotator);
+		Server_SpawnSlotActor(ActiveSlotCoordinate);
 	}
 
+}
+
+void ANetspeakPlayerController::Server_SpawnSlotActor_Implementation(FVector Coordinate)
+{
+	UWorld* const World = GetWorld();
+	if (!World)
+	{
+		return;
+	}
+	World->SpawnActor<ASlotActor>(FSlotUtilities::GetDefaultSlotActorClass(World),
+								  FSlotUtilities::ToWorldPosition(Coordinate, FSlotUtilities::GetSlotSize(World)),
+								  FRotator::ZeroRotator);
+}
+
+
+bool ANetspeakPlayerController::Server_SpawnSlotActor_Validate(FVector Coordinate)
+{
+	return true;
 }

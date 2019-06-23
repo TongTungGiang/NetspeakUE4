@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
+#include "Farming/SlotActor.h"
+
 #include "NetspeakGameState.generated.h"
 
 /**
@@ -21,10 +23,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetSlotSize() { return SlotSize; }
 
+	UFUNCTION(BlueprintCallable)
+	UClass* GetDefaultSlotActorClass() { return *DefaultSlotActorClass; }
+
 private:
 	// Configurations
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Configuration", meta = (AllowPrivateAccess = "true"))
 	float SlotSize;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Configuration", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<ASlotActor> DefaultSlotActorClass;
 	// End Configuration
 
 };

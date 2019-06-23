@@ -22,4 +22,6 @@ public:
 	static class ASlotActor* GetSlotAtCoordinate(class UPrimitiveComponent* Detector, FVector SelectedCoordinate, float SlotSize);
 
 	static float GetSlotSize(class UWorld* World);
+
+	static UClass* GetDefaultSlotActorClass(UWorld* World);
 };

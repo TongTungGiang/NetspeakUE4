@@ -56,12 +56,6 @@ ANetspeakCharacter::ANetspeakCharacter()
 	SlotDetector = CreateDefaultSubobject<UBoxComponent>("SlotDetector");
 	SlotDetector->SetupAttachment(RootComponent);
 
-	// Get Default Slot Actor
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Farming/Slots/Blueprints/BP_SlotActor.BP_SlotActor'"));
-	if (ItemBlueprint.Object) {
-		DefaultSlotActorClass = (UClass*)ItemBlueprint.Object->GeneratedClass;
-	}
-
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
