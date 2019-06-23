@@ -3,7 +3,7 @@
 #include "SlotUtilities.h"
 #include "SlotActor.h"
 #include "Components/PrimitiveComponent.h"
-#include "NetspeakGameMode.h"
+#include "NetspeakGameState.h"
 #include "Engine/World.h"
 
 static const FVector AllowedDirections[] =
@@ -81,6 +81,6 @@ ASlotActor* FSlotUtilities::GetSlotAtCoordinate(UPrimitiveComponent* Detector, F
 
 float FSlotUtilities::GetSlotSize(UWorld* World)
 {
-	ANetspeakGameMode* GameMode = (ANetspeakGameMode*)(World->GetAuthGameMode());
-	return GameMode->GetSlotSize();
+	ANetspeakGameState* GameState = (ANetspeakGameState*)(World->GetGameState());
+	return GameState->GetSlotSize();
 }

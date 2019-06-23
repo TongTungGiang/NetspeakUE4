@@ -13,16 +13,6 @@ class ANetspeakGameMode : public AGameModeBase
 
 public:
 	ANetspeakGameMode();
-
-public:
-	UFUNCTION(BlueprintCallable)
-	float GetSlotSize() { return SlotSize; }
-
-private:	
-	// Configurations
-	UPROPERTY(EditAnywhere, BlueprintReadonly, Category="Configuration", meta = (AllowPrivateAccess = "true"))
-	float SlotSize;
-	// End Configuration
 };
 
 

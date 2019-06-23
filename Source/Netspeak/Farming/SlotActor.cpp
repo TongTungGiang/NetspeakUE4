@@ -45,8 +45,13 @@ void ASlotActor::Tick(float DeltaTime)
 
 void ASlotActor::SwitchToNextState()
 {
-	SlotStateHandler = SlotStateHandler->GetNextStateHandler();
-	InitState(SlotStateHandler);
+	USlotHandlerObject* NextState = SlotStateHandler->GetNextStateHandler();
+
+	if (NextState)
+	{
+		SlotStateHandler = NextState;
+		InitState(SlotStateHandler);
+	}
 }
 
 void ASlotActor::InitState(USlotHandlerObject* SlotStateHandler)

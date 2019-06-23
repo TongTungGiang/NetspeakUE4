@@ -44,8 +44,7 @@ void ASlotMarker::Tick(float DeltaTime)
 		FVector CurrentTargetLocation = FollowTarget->GetActorLocation();
 		FVector CurrentTargetOrientation = FollowTarget->GetActorForwardVector();
 
-		ANetspeakGameMode* GameMode = (ANetspeakGameMode*)(GetWorld()->GetAuthGameMode());
-		float SlotSize = GameMode->GetSlotSize();
+		float SlotSize = FSlotUtilities::GetSlotSize(GetWorld());
 		FVector DesiredLocation = FSlotUtilities::FindClosestSlot(CurrentTargetLocation, CurrentTargetOrientation, SlotSize);
 
 		SetActorLocation(DesiredLocation);
@@ -58,7 +57,14 @@ void ASlotMarker::Tick(float DeltaTime)
 		}
 		else
 		{
-			NextAction = Slot->GetNextState()->StateText;
+			if (Slot->GetNextState())
+			{
+				NextAction = Slot->GetNextState()->StateText;
+			}
+			else
+			{
+				NextAction = FText();
+			}
 		}
 	}
 }

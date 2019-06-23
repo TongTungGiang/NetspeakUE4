@@ -4,6 +4,9 @@
 
 USlotHandlerObject* USlotHandlerObject::GetNextStateHandler()
 {
+	if (!NextState)
+		return NULL;
+
 	USlotHandlerObject* Instance = NewObject<USlotHandlerObject>(this, *NextState);
 	return Instance;
 }
