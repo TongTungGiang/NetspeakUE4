@@ -3,5 +3,7 @@
 #include "NetspeakGameState.h"
 
 
-
-
+ANetspeakGameState::ANetspeakGameState()
+{
+	SlotSize = 100;
+}

@@ -5,6 +5,7 @@
 #include "Components/PrimitiveComponent.h"
 #include "NetspeakGameState.h"
 #include "Engine/World.h"
+#include <Kismet/GameplayStatics.h>
 
 static const FVector AllowedDirections[] =
 {
@@ -80,7 +81,8 @@ ASlotActor* FSlotUtilities::GetSlotAtCoordinate(UPrimitiveComponent* Detector, F
 }
 
 float FSlotUtilities::GetSlotSize(UWorld* World)
-{
-	ANetspeakGameState* GameState = (ANetspeakGameState*)(World->GetGameState());
+{	
+	ANetspeakGameState* GameState = World->GetGameState<ANetspeakGameState>();
+
 	return GameState->GetSlotSize();
 }

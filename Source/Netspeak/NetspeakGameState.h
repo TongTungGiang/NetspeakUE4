@@ -3,17 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameState.h"
+#include "GameFramework/GameStateBase.h"
 #include "NetspeakGameState.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class NETSPEAK_API ANetspeakGameState : public AGameState
+class NETSPEAK_API ANetspeakGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 
+public:
+	ANetspeakGameState();
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -23,5 +25,6 @@ private:
 	// Configurations
 	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Configuration", meta = (AllowPrivateAccess = "true"))
 	float SlotSize;
-	// End Configuration	
+	// End Configuration
+
 };

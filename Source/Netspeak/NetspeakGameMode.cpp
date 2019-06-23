@@ -3,6 +3,7 @@
 #include "NetspeakGameMode.h"
 #include "NetspeakPlayerController.h"
 #include "NetspeakCharacter.h"
+#include "NetspeakGameState.h"
 #include "UObject/ConstructorHelpers.h"
 
 ANetspeakGameMode::ANetspeakGameMode()
@@ -15,5 +16,12 @@ ANetspeakGameMode::ANetspeakGameMode()
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
+	}
+
+	// set default game state class
+	static ConstructorHelpers::FClassFinder<ANetspeakGameState> GameStateBPClass(TEXT("/Game/Common/BP_NetspeakGameState"));
+	if (GameStateBPClass.Class != NULL)
+	{
+		GameStateClass = GameStateBPClass.Class;
 	}
 }

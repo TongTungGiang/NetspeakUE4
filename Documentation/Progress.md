@@ -54,8 +54,17 @@ So that means I have two tasks ahead, hopefully I can finish this within 1 hour 
     - Anyways, now the character can run around, with a marker indicating the closest slot in front of him, and can soil an empty slot. Next work would be allowing him to change the slot from soil to other states, which should be easy with current code base. Also, time to play with some HUD stuff, so that player can have an indicator on the slot telling him if he presses Enter, which would happen.
     - But I'm gonna take a short break.
 - 17.00: Back from break.
-- 18.30: Took me more than an hour to figure out how to make a UI widget, and how to make it follow the actor in world space. Luckily no math involved, UE has a few handy functions for that. Next I'd make the widget indicates next state of any slot, event empty ones. Off the top of my head it seems I should make another helper/utilities function for this, because I'd already have the same thing when player hits Enter key to spawn new cell/switch to next state.
+- 18.30: Took me more than an hour to figure out how to make a UI widget, and how to make it follow the actor in world space. Luckily on math involved, UE has a few handy functions for that. Next I'd make the widget indicates next state of any slot, event empty ones. Off the top of my head it seems I should make another helper/utilities function for this, because I'd already have the same thing when player hits Enter key to spawn new cell/switch to next state.
 - 19.20: Done with the widget's content. Now it would display what the gamer should expect when pressing Enter.
 - 19.50: Done adding remaining states and experiment switching between them. Next step would be 
 add code for handling time-based transition (plant to harvest ready), and starting to tackle multiplayer.
 
+
+#### Sunday, 23rd June 2019
+- 9.30: Get up and start working. Turned on Dedicated server.
+- 12.00: Game crashed when just fire Play button. The call stack and debugger showed that there is something wrong with a reference somewhere, turned out Game Mode object cannot be accessed on. A couple of minutes wandering around on Google leads me to the great PDF called UE4 Networking Compedium. Great, so I have to switch SlotSize config variable to a Game State class. 
+Really got confused though. When my game state derives from AGameState, the character's BeginPlay event isn't even fired. Took me near one hour to figure out I should have it derives from AGameStateBase. But then, the SlotSize value is not deterministic every time, which leads to an inconsistent game result. One time it'd be zero, another time it was 27 and another try gives me the result of 84!!?!!
+Not sure if I've done anything wrong with the setup. Gonna take a rest and comeback later.
+- 14.00: Got back from break. Gotta tackle the bug.
+- 15.00: Looks like that I found the solution: 
+From the hint that in World Outliner, there seems to be something wrong with the initialization process. I spot that in the custom game mode there is also some code for setting default Pawn class, so I think it can be done the same with Game State class.
