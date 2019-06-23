@@ -32,6 +32,9 @@ protected:
 	void InteractWithClosestSlot();
 
 	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_SwitchToNextState(ASlotActor* Slot);
+
+	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SpawnSlotActor(FVector Coordinate);
 };
 

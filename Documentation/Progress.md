@@ -72,3 +72,8 @@ Increased player number to two, and things seems to be working fine except those
     - Non empty slots don't get replicated.
     - Some runtime error on slot marker blueprint.
     - There are two HUD elements on each client, where should be only one for the local player.
+- 20.30: Solved most of the networking problems
+    - Spawning Slot Actors on server and replicating them to clients
+    - Use RPCs for spawning actor (aka Empty->Non Empty slot) and transition to next state.
+    - However, UObject replication is frustrating. I've been searching around for hours, asking on dev Discord, but can't find out what's going wrong. I'm gonna take a rest now and come back to solve it tomorrow with a fresh mind.
+

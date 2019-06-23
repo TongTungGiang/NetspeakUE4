@@ -26,15 +26,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-public:
+	virtual bool ReplicateSubobjects(class UActorChannel *Channel, class FOutBunch *Bunch, FReplicationFlags *RepFlags) override;
 
-	void SwitchToNextState();
+
+public:
 
 	USlotHandlerObject* GetNextState();
 
+	void SwitchToNextState();
+
+	void Server_SwitchToNextState();
+
 private:
 
-	void InitState(USlotHandlerObject* SlotStateHandler);
+	void Client_InitState(USlotHandlerObject* SlotStateHandler);
 
 private:
 
@@ -51,9 +56,9 @@ private:
 	UPROPERTY(ReplicatedUsing=OnRep_SlotStateHandler)
 	USlotHandlerObject* SlotStateHandler;
 
-	UMaterial* SlotMaterial;
-
 	UFUNCTION()
 	void OnRep_SlotStateHandler();
+
+	UMaterial* SlotMaterial;
 	
 };

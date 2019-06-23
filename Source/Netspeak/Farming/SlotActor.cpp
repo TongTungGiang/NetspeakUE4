@@ -5,12 +5,13 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Net/UnrealNetwork.h"
+#include <Engine/ActorChannel.h>
 
 
 // Sets default values
 ASlotActor::ASlotActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
@@ -44,7 +45,7 @@ void ASlotActor::BeginPlay()
 	SlotMesh->SetMaterial(0, SlotMaterial);
 
 	SlotStateHandler = NewObject<USlotHandlerObject>(this, *DefaultState);
-	InitState(SlotStateHandler);
+	Client_InitState(SlotStateHandler);
 }
 
 // Called every frame
@@ -54,18 +55,19 @@ void ASlotActor::Tick(float DeltaTime)
 
 }
 
-void ASlotActor::SwitchToNextState()
+bool ASlotActor::ReplicateSubobjects(class UActorChannel *Channel, class FOutBunch *Bunch, FReplicationFlags *RepFlags)
 {
-	USlotHandlerObject* NextState = SlotStateHandler->GetNextStateHandler();
+	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
-	if (NextState)
+	if (SlotStateHandler != nullptr)
 	{
-		SlotStateHandler = NextState;
-		InitState(SlotStateHandler);
+		WroteSomething |= Channel->ReplicateSubobject(SlotStateHandler, *Bunch, *RepFlags);
 	}
+
+	return WroteSomething;
 }
 
-void ASlotActor::InitState(USlotHandlerObject* SlotStateHandler)
+void ASlotActor::Client_InitState(USlotHandlerObject* SlotStateHandler)
 {
 	// Set color
 	UMaterialInstanceDynamic* Material = (UMaterialInstanceDynamic*)SlotMesh->CreateAndSetMaterialInstanceDynamic(0);
@@ -74,7 +76,7 @@ void ASlotActor::InitState(USlotHandlerObject* SlotStateHandler)
 
 void ASlotActor::OnRep_SlotStateHandler()
 {
-	InitState(SlotStateHandler);
+	Client_InitState(SlotStateHandler);
 }
 
 USlotHandlerObject* ASlotActor::GetNextState()
@@ -82,3 +84,22 @@ USlotHandlerObject* ASlotActor::GetNextState()
 	return SlotStateHandler->GetNextStateHandler();
 }
 
+void ASlotActor::SwitchToNextState()
+{
+	USlotHandlerObject* NextState = SlotStateHandler->GetNextStateHandler();
+
+	if (NextState)
+	{
+		SlotStateHandler = NextState;
+	}
+
+	if (Role < ROLE_Authority)
+	{
+		Server_SwitchToNextState();
+	}
+}
+
+void ASlotActor::Server_SwitchToNextState()
+{
+	SwitchToNextState();
+}

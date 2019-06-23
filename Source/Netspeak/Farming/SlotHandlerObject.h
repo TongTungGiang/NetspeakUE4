@@ -24,6 +24,14 @@ public:
 
 	FLinearColor GetStateColor() { return StateColor; }
 
+	virtual bool IsSupportedForNetworking() const override
+	{
+		return true;
+	}
+
+
+	virtual class UWorld* GetWorld() const override;
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")

@@ -69,8 +69,8 @@ void ANetspeakPlayerController::InteractWithClosestSlot()
 	if (SlotAtCoordinate)
 	{
 		//SlotAtCoordinate->SwitchToNextState();
-		UE_LOG(LogTemp, Log, TEXT("Switch to next state"));
-		SlotAtCoordinate->SwitchToNextState();
+		UE_LOG(LogTemp, Log, TEXT("Switch to next state, actor role"));
+		Server_SwitchToNextState(SlotAtCoordinate);
 	}
 	else
 	{
@@ -78,6 +78,16 @@ void ANetspeakPlayerController::InteractWithClosestSlot()
 		Server_SpawnSlotActor(ActiveSlotCoordinate);
 	}
 
+}
+
+void ANetspeakPlayerController::Server_SwitchToNextState_Implementation(ASlotActor* Slot)
+{
+	Slot->SwitchToNextState();
+}
+
+bool ANetspeakPlayerController::Server_SwitchToNextState_Validate(ASlotActor* Slot)
+{
+	return true;
 }
 
 void ANetspeakPlayerController::Server_SpawnSlotActor_Implementation(FVector Coordinate)
