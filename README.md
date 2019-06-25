@@ -1,5 +1,5 @@
 # Netspeak UE4 test
-
+- The project is written using Unreal Engine 4.20.3
 - The project should be able to be checked out and run on a Window machine without any problem.
 - Use Test level (Test.umap). This should be the default map when openning in the editor.
 - Use arrows to move around and Enter to interact with the farm.
