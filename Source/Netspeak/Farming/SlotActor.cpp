@@ -45,9 +45,15 @@ void ASlotActor::BeginPlay()
 
 	SlotMesh->SetMaterial(0, SlotMaterial);
 
+	auto DefaultStateObject = NewObject<USlotHandlerObject>(this, *DefaultState);
 	if (HasAuthority())
 	{
-		Server_InitState(NewObject<USlotHandlerObject>(this, *DefaultState));
+		Server_InitState(DefaultStateObject);
+	}
+	else
+	{
+		SlotColor = DefaultStateObject->GetStateColor();
+		Client_UpdateSlotColor();
 	}
 }
 
@@ -55,7 +61,6 @@ void ASlotActor::BeginPlay()
 void ASlotActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 bool ASlotActor::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)
@@ -70,10 +75,9 @@ bool ASlotActor::ReplicateSubobjects(class UActorChannel* Channel, class FOutBun
 	return WroteSomething;
 }
 
-void ASlotActor::OnRep_UpdateSlotColor()
+void ASlotActor::OnRep_SlotColor()
 {
-	UMaterialInstanceDynamic* Material = (UMaterialInstanceDynamic*)SlotMesh->CreateAndSetMaterialInstanceDynamic(0);
-	Material->SetVectorParameterValue(FName(TEXT("Color")), SlotColor);
+	Client_UpdateSlotColor();
 }
 
 void ASlotActor::Server_InitState(USlotHandlerObject* State)
@@ -82,6 +86,12 @@ void ASlotActor::Server_InitState(USlotHandlerObject* State)
 
 	SlotColor = SlotStateHandler->StateColor;
 	NextStateText = SlotStateHandler->GetNextStateHandler()->StateText;
+}
+
+void ASlotActor::Client_UpdateSlotColor()
+{
+	UMaterialInstanceDynamic* Material = (UMaterialInstanceDynamic*)SlotMesh->CreateAndSetMaterialInstanceDynamic(0);
+	Material->SetVectorParameterValue(FName(TEXT("Color")), SlotColor);
 }
 
 void ASlotActor::SwitchToNextState()

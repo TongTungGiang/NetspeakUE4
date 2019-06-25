@@ -58,15 +58,17 @@ private:
 private:
 	// Values that get replicated
 
-	UPROPERTY(ReplicatedUsing=OnRep_UpdateSlotColor)
+	UPROPERTY(ReplicatedUsing=OnRep_SlotColor)
 	FLinearColor SlotColor;
 
 	UPROPERTY(Replicated)
 	FText NextStateText;
 
 	UFUNCTION()
-	void OnRep_UpdateSlotColor();
+	void OnRep_SlotColor();
 
 	void Server_InitState(USlotHandlerObject* State);
+
+	void Client_UpdateSlotColor();
 	
 };
