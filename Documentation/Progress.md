@@ -77,3 +77,22 @@ Increased player number to two, and things seems to be working fine except those
     - Use RPCs for spawning actor (aka Empty->Non Empty slot) and transition to next state.
     - However, UObject replication is frustrating. I've been searching around for hours, asking on dev Discord, but can't find out what's going wrong. I'm gonna take a rest now and come back to solve it tomorrow with a fresh mind.
 
+#### Tuesday, 25th June 2019
+- 10.00: OK, so UObject might or might not work with replication. I reckon something with UE's garbage collector got into the way so that its value gets reset into NULL, so I might benefit from value-type variables. Given that I only need a FText and a FColor to render slot's information in client side, I don't need to replicate the whole UObject at all. Let's put those UObject work to the server, which is safer, and just replicate visual-related variables.
+So that seems to work well. The only problems remaining are:
+    - The initial color of a slot is not correct, even though the debugger showing the color variable get replicated _after_ server's BeginPlay().
+    - The server needs to handle time-based state as well, for transition from Seed to Plant, before the player can harvest it.
+- 20.00: Back from work and just finished dinner. Let's put this to the end. Solve the initial color bug first.
+- 20.20: Fixed it. The last item on the list is time-based states.
+- 21.00: Done with time-based states. The current approach would be the server take care about the actual timer of the state - this, in theory, can prevent cheating. Clients also have reference values, so that players can know how much time is he away from harvesting a slot.
+
+## Closing thoughts
+- Switching from Unity to Unreal architecture is quite hard, and it took me longer than expected to get used to the new approach to problems.
+- I really like the built-in authorative server support in UE4 - which took me a huge effort to achieve with Photon and Unity (an incomplete and buggy version, it's shamed to admit, but truths are truths).
+- My college days just come flooding back to me when working with C++. I've had a lot of fun debugging crashes.
+- This is a list of my assumptions when working in this item:
+    - Gamers interact with the map with keyboard only.
+    - A slot, once is soiled, cannot be "unsoiled".
+    - In multiplayer mode, players should be able to observe the farms of other players in realtime, which includes how many tiles of each state does his friend has, and how long does it take him to wait to loot his friend's plant (or help him to harvest).
+- Total time taken in this test: roughly 22-24 hours: two weekends, eight hours each and three weekday evenings, two to three hours each.
+- And last but not least, I find working with UE4 very interesting and eye-opening. Hopefully, I can come to work with you guys and learn more about how to get the best out of this engine!
