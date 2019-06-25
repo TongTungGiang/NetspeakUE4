@@ -57,14 +57,7 @@ void ASlotMarker::Tick(float DeltaTime)
 		}
 		else
 		{
-			if (Slot->GetNextState())
-			{
-				NextAction = Slot->GetNextState()->StateText;
-			}
-			else
-			{
-				NextAction = FText();
-			}
+			NextAction = Slot->GetNextStateText();
 		}
 	}
 }

@@ -31,15 +31,11 @@ public:
 
 public:
 
-	USlotHandlerObject* GetNextState();
+	FText GetNextStateText() { return NextStateText; }
 
 	void SwitchToNextState();
 
 	void Server_SwitchToNextState();
-
-private:
-
-	void Client_InitState(USlotHandlerObject* SlotStateHandler);
 
 private:
 
@@ -53,12 +49,24 @@ private:
 
 private:
 
-	UPROPERTY(ReplicatedUsing=OnRep_SlotStateHandler)
+	/** CAUTION: Server variable only, don't get replicated at all */
 	USlotHandlerObject* SlotStateHandler;
 
-	UFUNCTION()
-	void OnRep_SlotStateHandler();
-
+	UPROPERTY()
 	UMaterial* SlotMaterial;
+
+private:
+	// Values that get replicated
+
+	UPROPERTY(ReplicatedUsing=OnRep_UpdateSlotColor)
+	FLinearColor SlotColor;
+
+	UPROPERTY(Replicated)
+	FText NextStateText;
+
+	UFUNCTION()
+	void OnRep_UpdateSlotColor();
+
+	void Server_InitState(USlotHandlerObject* State);
 	
 };

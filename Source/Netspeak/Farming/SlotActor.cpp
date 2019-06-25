@@ -30,11 +30,12 @@ ASlotActor::ASlotActor()
 	bReplicates = true;
 }
 
-void ASlotActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+void ASlotActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ASlotActor, SlotStateHandler);
+	DOREPLIFETIME(ASlotActor, SlotColor);
+	DOREPLIFETIME(ASlotActor, NextStateText);
 }
 
 // Called when the game starts or when spawned
@@ -44,8 +45,10 @@ void ASlotActor::BeginPlay()
 
 	SlotMesh->SetMaterial(0, SlotMaterial);
 
-	SlotStateHandler = NewObject<USlotHandlerObject>(this, *DefaultState);
-	Client_InitState(SlotStateHandler);
+	if (HasAuthority())
+	{
+		Server_InitState(NewObject<USlotHandlerObject>(this, *DefaultState));
+	}
 }
 
 // Called every frame
@@ -55,7 +58,7 @@ void ASlotActor::Tick(float DeltaTime)
 
 }
 
-bool ASlotActor::ReplicateSubobjects(class UActorChannel *Channel, class FOutBunch *Bunch, FReplicationFlags *RepFlags)
+bool ASlotActor::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
 	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
@@ -67,31 +70,23 @@ bool ASlotActor::ReplicateSubobjects(class UActorChannel *Channel, class FOutBun
 	return WroteSomething;
 }
 
-void ASlotActor::Client_InitState(USlotHandlerObject* SlotStateHandler)
+void ASlotActor::OnRep_UpdateSlotColor()
 {
-	// Set color
 	UMaterialInstanceDynamic* Material = (UMaterialInstanceDynamic*)SlotMesh->CreateAndSetMaterialInstanceDynamic(0);
-	Material->SetVectorParameterValue(FName(TEXT("Color")), SlotStateHandler->GetStateColor());
+	Material->SetVectorParameterValue(FName(TEXT("Color")), SlotColor);
 }
 
-void ASlotActor::OnRep_SlotStateHandler()
+void ASlotActor::Server_InitState(USlotHandlerObject* State)
 {
-	Client_InitState(SlotStateHandler);
-}
+	SlotStateHandler = State;
 
-USlotHandlerObject* ASlotActor::GetNextState()
-{
-	return SlotStateHandler->GetNextStateHandler();
+	SlotColor = SlotStateHandler->StateColor;
+	NextStateText = SlotStateHandler->GetNextStateHandler()->StateText;
 }
 
 void ASlotActor::SwitchToNextState()
 {
-	USlotHandlerObject* NextState = SlotStateHandler->GetNextStateHandler();
-
-	if (NextState)
-	{
-		SlotStateHandler = NextState;
-	}
+	Server_InitState(SlotStateHandler->GetNextStateHandler());
 
 	if (Role < ROLE_Authority)
 	{
