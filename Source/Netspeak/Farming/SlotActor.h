@@ -31,7 +31,9 @@ public:
 
 public:
 
-	FText GetNextStateText() { return NextStateText; }
+	bool CanReactToInput();
+
+	FText Client_GetNextStateText();
 
 	void SwitchToNextState();
 
@@ -64,11 +66,19 @@ private:
 	UPROPERTY(Replicated)
 	FText NextStateText;
 
+	UPROPERTY(ReplicatedUsing =OnRep_TimeInState)
+	float MinimumTimeInState;
+
 	UFUNCTION()
 	void OnRep_SlotColor();
+
+	UFUNCTION()
+	void OnRep_TimeInState();
 
 	void Server_InitState(USlotHandlerObject* State);
 
 	void Client_UpdateSlotColor();
+
+	float RemainingTimeInState;
 	
 };

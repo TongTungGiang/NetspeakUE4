@@ -36,6 +36,7 @@ void ASlotActor::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLife
 
 	DOREPLIFETIME(ASlotActor, SlotColor);
 	DOREPLIFETIME(ASlotActor, NextStateText);
+	DOREPLIFETIME(ASlotActor, MinimumTimeInState);
 }
 
 // Called when the game starts or when spawned
@@ -61,6 +62,15 @@ void ASlotActor::BeginPlay()
 void ASlotActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (RemainingTimeInState > 0)
+	{
+		RemainingTimeInState -= DeltaTime;
+		if (RemainingTimeInState <= 0)
+		{
+			RemainingTimeInState = 0;
+		}
+	}
 }
 
 bool ASlotActor::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)
@@ -75,9 +85,27 @@ bool ASlotActor::ReplicateSubobjects(class UActorChannel* Channel, class FOutBun
 	return WroteSomething;
 }
 
+bool ASlotActor::CanReactToInput()
+{
+	return RemainingTimeInState <= 0;
+}
+
+FText ASlotActor::Client_GetNextStateText()
+{
+	if (RemainingTimeInState <= 0)
+		return NextStateText;
+
+	return FText::Format(FText::FromString("{0} in {1} seconds"), NextStateText, FMath::FloorToInt(RemainingTimeInState));
+}
+
 void ASlotActor::OnRep_SlotColor()
 {
 	Client_UpdateSlotColor();
+}
+
+void ASlotActor::OnRep_TimeInState()
+{
+	RemainingTimeInState = MinimumTimeInState;
 }
 
 void ASlotActor::Server_InitState(USlotHandlerObject* State)
@@ -86,6 +114,8 @@ void ASlotActor::Server_InitState(USlotHandlerObject* State)
 
 	SlotColor = SlotStateHandler->StateColor;
 	NextStateText = SlotStateHandler->GetNextStateHandler()->StateText;
+	MinimumTimeInState = SlotStateHandler->MinimumTimeInState;
+	RemainingTimeInState = MinimumTimeInState;
 }
 
 void ASlotActor::Client_UpdateSlotColor()
@@ -96,6 +126,12 @@ void ASlotActor::Client_UpdateSlotColor()
 
 void ASlotActor::SwitchToNextState()
 {
+	// double check the time requirements
+	// I don't reuse the CanReactToInput() function for clarity
+	// and sometimes that function may require additional condition
+	if (RemainingTimeInState > 0)
+		return;
+
 	Server_InitState(SlotStateHandler->GetNextStateHandler());
 
 	if (Role < ROLE_Authority)

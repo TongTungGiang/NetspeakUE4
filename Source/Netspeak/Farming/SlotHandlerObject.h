@@ -32,6 +32,8 @@ public:
 
 	virtual class UWorld* GetWorld() const override;
 
+	bool CanReactToInput();
+
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")
@@ -42,4 +44,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")
 	FText StateText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "States")
+	float MinimumTimeInState;
 };
